@@ -7,14 +7,14 @@ import { SubmitButton } from "@/components/ui/SubmitButton";
 export default async function AdminLoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; detail?: string }>;
 }) {
   const session = await auth();
   if (session?.user) {
     redirect("/admin/dashboard");
   }
 
-  const { error } = await searchParams;
+  const { error, detail } = await searchParams;
 
   async function login(formData: FormData) {
     "use server";
@@ -30,7 +30,12 @@ export default async function AdminLoginPage({
         if (err.type === "CredentialsSignin") {
           redirect("/admin/login?error=invalid");
         }
-        redirect(`/admin/login?error=${encodeURIComponent(err.type)}`);
+        console.error("Admin login error:", err.type, err.cause);
+        const cause = err.cause as { err?: Error } | undefined;
+        const detail = cause?.err?.message ?? err.message;
+        redirect(
+          `/admin/login?error=${encodeURIComponent(err.type)}&detail=${encodeURIComponent(detail)}`,
+        );
       }
       throw err;
     }
@@ -40,7 +45,7 @@ export default async function AdminLoginPage({
     error === "invalid"
       ? "Invalid email or password"
       : error
-        ? `Sign-in error: ${error}`
+        ? `Sign-in error: ${error}${detail ? ` — ${detail}` : ""}`
         : undefined;
 
   return (
