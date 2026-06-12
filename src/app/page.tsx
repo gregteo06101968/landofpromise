@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <SkyBackground>
       <LandingCard className="flex flex-col items-center text-center">
-        <span className="mb-6 rounded-full bg-gold/15 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-gold">
+        <span className="mb-6 inline-flex rounded-2xl bg-gold/15 px-4 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-gold sm:text-xs sm:tracking-widest">
           Child&apos;s Information Program
         </span>
 

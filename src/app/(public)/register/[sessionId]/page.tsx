@@ -21,7 +21,7 @@ export default async function RegisterForSessionPage({
   return (
     <LandingCard className="max-w-2xl">
       <div className="text-center">
-        <span className="mb-4 inline-flex rounded-full bg-gold/15 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-gold">
+        <span className="mb-4 inline-flex rounded-2xl bg-gold/15 px-4 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-gold sm:text-xs sm:tracking-widest">
           Child&apos;s Information Program
         </span>
         <h1 className="font-display text-3xl font-bold text-navy-deep">
