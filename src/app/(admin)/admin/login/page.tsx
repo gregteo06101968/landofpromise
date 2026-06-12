@@ -27,11 +27,21 @@ export default async function AdminLoginPage({
       });
     } catch (err) {
       if (err instanceof AuthError) {
-        redirect("/admin/login?error=invalid");
+        if (err.type === "CredentialsSignin") {
+          redirect("/admin/login?error=invalid");
+        }
+        redirect(`/admin/login?error=${encodeURIComponent(err.type)}`);
       }
       throw err;
     }
   }
+
+  const errorMessage =
+    error === "invalid"
+      ? "Invalid email or password"
+      : error
+        ? `Sign-in error: ${error}`
+        : undefined;
 
   return (
     <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-16">
@@ -41,9 +51,7 @@ export default async function AdminLoginPage({
       <form action={login} className="flex flex-col gap-4">
         <FormField label="Email" name="email" type="email" required />
         <FormField label="Password" name="password" type="password" required />
-        <ErrorMessage
-          message={error === "invalid" ? "Invalid email or password" : undefined}
-        />
+        <ErrorMessage message={errorMessage} />
         <SubmitButton pendingText="Signing in...">Sign in</SubmitButton>
       </form>
     </main>
