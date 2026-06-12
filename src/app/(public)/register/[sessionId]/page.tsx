@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getClassSessionById } from "@/db/queries";
+import { LandingCard } from "@/components/LandingCard";
 import { RegistrationForm } from "@/components/registration/RegistrationForm";
 
 export const dynamic = "force-dynamic";
@@ -18,16 +19,21 @@ export default async function RegisterForSessionPage({
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-12">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-900">
+    <LandingCard className="max-w-2xl">
+      <div className="text-center">
+        <span className="mb-4 inline-flex rounded-full bg-gold/15 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-gold">
+          Child&apos;s Information Program
+        </span>
+        <h1 className="font-display text-3xl font-bold text-navy-deep">
           Register for {session.title}
         </h1>
         {session.schedule && (
           <p className="mt-1 text-sm text-slate-600">{session.schedule}</p>
         )}
       </div>
-      <RegistrationForm classSessionId={classSessionId} />
-    </main>
+      <div className="mt-6">
+        <RegistrationForm classSessionId={classSessionId} />
+      </div>
+    </LandingCard>
   );
 }

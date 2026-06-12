@@ -1,28 +1,51 @@
 import Link from "next/link";
+import { SkyBackground } from "@/components/SkyBackground";
+import { LandingCard } from "@/components/LandingCard";
 
 export default function Home() {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-6 px-4 py-12 text-center">
-      <h1 className="text-3xl font-semibold text-slate-900">
-        Land of Promise
-      </h1>
-      <p className="max-w-md text-base text-slate-600">
-        Register your child for an upcoming class session.
-      </p>
-      <div className="flex flex-col gap-3 sm:flex-row">
+    <SkyBackground>
+      <LandingCard className="flex flex-col items-center text-center">
+        <span className="mb-6 rounded-full bg-gold/15 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-gold">
+          Child&apos;s Information Program
+        </span>
+
+        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-gold/20 to-gold/40 text-4xl">
+          📖
+        </div>
+
+        <h1 className="font-display text-4xl font-bold leading-tight sm:text-5xl">
+          <span className="block text-navy-deep">Land of</span>
+          <span className="block text-gold">Promise</span>
+        </h1>
+
+        <p className="mt-4 max-w-sm text-sm text-slate-600 sm:text-base">
+          Nurturing young hearts in faith. Register your child for an
+          upcoming class.
+        </p>
+
         <Link
           href="/register"
-          className="inline-flex items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-700"
+          className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-navy-deep to-navy-light px-6 py-3 text-sm font-semibold text-cream shadow-lg transition hover:opacity-90 sm:text-base"
         >
-          Register your child
+          <span aria-hidden>✦</span> Register Your Child
         </Link>
+
+        <div className="my-5 flex w-full items-center gap-3">
+          <span className="h-px flex-1 bg-slate-200" />
+          <span className="text-xs uppercase tracking-wide text-slate-400">
+            or
+          </span>
+          <span className="h-px flex-1 bg-slate-200" />
+        </div>
+
         <Link
           href="/admin/login"
-          className="inline-flex items-center justify-center rounded-md border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          className="inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-navy-deep transition hover:bg-slate-50 sm:text-base"
         >
-          Admin login
+          Admin Login
         </Link>
-      </div>
-    </main>
+      </LandingCard>
+    </SkyBackground>
   );
 }
