@@ -31,8 +31,9 @@ export default async function AdminLoginPage({
           redirect("/admin/login?error=invalid");
         }
         console.error("Admin login error:", err.type, err.cause);
-        const cause = err.cause as { err?: Error } | undefined;
-        const detail = cause?.err?.message ?? err.message;
+        const cause = err.cause as { err?: Error & { cause?: Error } } | undefined;
+        const detail =
+          cause?.err?.cause?.message ?? cause?.err?.message ?? err.message;
         redirect(
           `/admin/login?error=${encodeURIComponent(err.type)}&detail=${encodeURIComponent(detail)}`,
         );
