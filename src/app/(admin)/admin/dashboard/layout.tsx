@@ -23,7 +23,7 @@ export default async function AdminDashboardLayout({
         <nav className="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-4">
           <div className="flex items-center gap-6">
             <span className="font-display text-lg font-semibold text-cream">
-              Land of <span className="text-gold">Promise</span> Admin
+              Land of <span className="text-gold">Promise</span>
             </span>
             <Link
               href="/admin/dashboard"
