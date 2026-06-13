@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, notInArray } from "drizzle-orm";
 import { db } from "@/db";
 import {
   admins,
@@ -98,6 +98,24 @@ export async function getSessionObjectives(communitySessionId: number) {
     .from(sessionObjectives)
     .where(eq(sessionObjectives.communitySessionId, communitySessionId))
     .orderBy(sessionObjectives.weekNumber);
+}
+
+export async function getChildrenNotInSession(communitySessionId: number) {
+  const registeredChildIds = db
+    .select({ childId: registrations.childId })
+    .from(registrations)
+    .where(eq(registrations.communitySessionId, communitySessionId));
+
+  return db
+    .select({
+      childId: children.id,
+      childName: children.fullName,
+      parentName: parents.name,
+    })
+    .from(children)
+    .innerJoin(parents, eq(children.parentId, parents.id))
+    .where(notInArray(children.id, registeredChildIds))
+    .orderBy(children.fullName);
 }
 
 export async function getAttendanceForDate(

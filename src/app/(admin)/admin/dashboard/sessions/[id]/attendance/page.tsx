@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
+import { AddChildToSessionForm } from "@/components/admin/AddChildToSessionForm";
 import { AttendanceDatePicker } from "@/components/admin/AttendanceDatePicker";
 import { AttendanceForm } from "@/components/admin/AttendanceForm";
 import { SessionTabs } from "@/components/admin/SessionTabs";
-import { getAttendanceForDate, getCommunitySessionById } from "@/db/queries";
+import { getAttendanceForDate, getChildrenNotInSession, getCommunitySessionById } from "@/db/queries";
 
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
@@ -20,9 +21,10 @@ export default async function SessionAttendancePage({
   const sessionId = Number(id);
   const attendanceDate = date || todayIso();
 
-  const [session, rows] = await Promise.all([
+  const [session, rows, availableChildren] = await Promise.all([
     getCommunitySessionById(sessionId),
     getAttendanceForDate(sessionId, attendanceDate),
+    getChildrenNotInSession(sessionId),
   ]);
 
   if (!session) {
@@ -37,6 +39,8 @@ export default async function SessionAttendancePage({
       <AttendanceDatePicker sessionId={sessionId} date={attendanceDate} />
 
       <AttendanceForm communitySessionId={sessionId} attendanceDate={attendanceDate} rows={rows} />
+
+      <AddChildToSessionForm communitySessionId={sessionId} availableChildren={availableChildren} />
     </div>
   );
 }

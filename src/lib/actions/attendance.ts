@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
-import { attendanceRecords, registrations } from "@/db/schema";
+import { attendanceRecords, children, registrations } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { attendanceFormSchema } from "@/lib/validation/session-detail";
@@ -54,4 +54,32 @@ export async function saveAttendance(
 
   revalidatePath(`/admin/dashboard/sessions/${communitySessionId}/attendance`);
   return { success: true };
+}
+
+export async function addChildToSession(communitySessionId: number, childId: number) {
+  const session = await auth();
+  if (!session?.user) {
+    throw new Error("Unauthorized");
+  }
+
+  const [child] = await db
+    .select({ parentId: children.parentId })
+    .from(children)
+    .where(eq(children.id, childId));
+
+  if (!child) {
+    throw new Error("Child not found");
+  }
+
+  await db
+    .insert(registrations)
+    .values({
+      childId,
+      communitySessionId,
+      parentId: child.parentId,
+    })
+    .onConflictDoNothing();
+
+  revalidatePath(`/admin/dashboard/sessions/${communitySessionId}/attendance`);
+  revalidatePath(`/admin/dashboard/sessions/${communitySessionId}/edit`);
 }
