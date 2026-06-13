@@ -7,17 +7,17 @@ type AdminRow = {
 
 export function AdminsTable({ admins }: { admins: AdminRow[] }) {
   return (
-    <div className="overflow-hidden rounded-md border border-slate-200">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <table className="w-full divide-y divide-slate-200 text-sm">
-        <thead className="bg-slate-50">
+        <thead className="bg-navy-deep/5">
           <tr>
-            <th className="px-4 py-2 text-left font-medium text-slate-600">
+            <th className="px-4 py-2 text-left font-medium text-navy-deep">
               Name
             </th>
-            <th className="px-4 py-2 text-left font-medium text-slate-600">
+            <th className="px-4 py-2 text-left font-medium text-navy-deep">
               Email
             </th>
-            <th className="px-4 py-2 text-left font-medium text-slate-600">
+            <th className="px-4 py-2 text-left font-medium text-navy-deep">
               Added
             </th>
           </tr>

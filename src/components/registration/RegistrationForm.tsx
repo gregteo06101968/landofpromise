@@ -14,18 +14,22 @@ export function RegistrationForm({ communitySessionId }: { communitySessionId: n
       <input type="hidden" name="communitySessionId" value={communitySessionId} />
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold text-slate-900">Your information</h2>
+        <h2 className="font-display text-lg font-semibold text-navy-deep">
+          Your information
+        </h2>
         <FormField label="Your name" name="parentName" required />
         <FormField label="Email" name="parentEmail" type="email" required />
         <FormField label="Phone" name="parentPhone" type="tel" />
       </div>
 
       <div className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold text-slate-900">Children</h2>
+        <h2 className="font-display text-lg font-semibold text-navy-deep">
+          Children
+        </h2>
         {Array.from({ length: childCount }).map((_, index) => (
           <div
             key={index}
-            className="flex flex-col gap-4 rounded-md border border-slate-200 p-4 sm:flex-row sm:items-end"
+            className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 sm:flex-row sm:items-end"
           >
             <div className="flex-1">
               <FormField label="Child's full name" name="childFullName" required />
@@ -39,7 +43,7 @@ export function RegistrationForm({ communitySessionId }: { communitySessionId: n
           <button
             type="button"
             onClick={() => setChildCount((count) => count + 1)}
-            className="text-sm font-medium text-slate-700 hover:text-slate-900"
+            className="text-sm font-medium text-navy-deep hover:text-navy-light"
           >
             + Add another child
           </button>
@@ -47,7 +51,7 @@ export function RegistrationForm({ communitySessionId }: { communitySessionId: n
             <button
               type="button"
               onClick={() => setChildCount((count) => count - 1)}
-              className="text-sm font-medium text-slate-700 hover:text-slate-900"
+              className="text-sm font-medium text-navy-deep hover:text-navy-light"
             >
               Remove last child
             </button>

@@ -3,6 +3,8 @@ import { AuthError } from "next-auth";
 import { auth, signIn } from "@/lib/auth";
 import { FormField, ErrorMessage } from "@/components/ui/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
+import { SkyBackground } from "@/components/SkyBackground";
+import { LandingCard } from "@/components/LandingCard";
 
 export default async function AdminLoginPage({
   searchParams,
@@ -50,16 +52,21 @@ export default async function AdminLoginPage({
         : undefined;
 
   return (
-    <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-16">
-      <h1 className="mb-6 text-2xl font-semibold text-slate-900">
-        Admin Login
-      </h1>
-      <form action={login} className="flex flex-col gap-4">
-        <FormField label="Email" name="email" type="email" required />
-        <FormField label="Password" name="password" type="password" required />
-        <ErrorMessage message={errorMessage} />
-        <SubmitButton pendingText="Signing in...">Sign in</SubmitButton>
-      </form>
-    </main>
+    <SkyBackground>
+      <LandingCard className="max-w-sm">
+        <span className="mb-4 inline-flex rounded-2xl bg-gold/15 px-4 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-gold sm:text-xs sm:tracking-widest">
+          Child&apos;s Information Program
+        </span>
+        <h1 className="font-display text-3xl font-bold text-navy-deep">
+          Admin Login
+        </h1>
+        <form action={login} className="mt-6 flex flex-col gap-4">
+          <FormField label="Email" name="email" type="email" required />
+          <FormField label="Password" name="password" type="password" required />
+          <ErrorMessage message={errorMessage} />
+          <SubmitButton pendingText="Signing in...">Sign in</SubmitButton>
+        </form>
+      </LandingCard>
+    </SkyBackground>
   );
 }

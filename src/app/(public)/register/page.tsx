@@ -1,4 +1,5 @@
 import { getActiveCommunitySessions } from "@/db/queries";
+import { LandingCard } from "@/components/LandingCard";
 import { SessionPicker } from "@/components/registration/SessionPicker";
 
 export const dynamic = "force-dynamic";
@@ -7,16 +8,19 @@ export default async function RegisterPage() {
   const sessions = await getActiveCommunitySessions();
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-12">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-900">
-          Register for a Community Session
-        </h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Choose a community session below to register your child.
-        </p>
+    <LandingCard className="max-w-2xl text-center">
+      <span className="mb-4 inline-flex rounded-2xl bg-gold/15 px-4 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-gold sm:text-xs sm:tracking-widest">
+        Child&apos;s Information Program
+      </span>
+      <h1 className="font-display text-3xl font-bold text-navy-deep">
+        Register for a Community Session
+      </h1>
+      <p className="mt-2 text-sm text-slate-600">
+        Choose a community session below to register your child.
+      </p>
+      <div className="mt-6 text-left">
+        <SessionPicker sessions={sessions} />
       </div>
-      <SessionPicker sessions={sessions} />
-    </main>
+    </LandingCard>
   );
 }

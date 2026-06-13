@@ -13,23 +13,23 @@ export function SessionsTable({ sessions }: { sessions: CommunitySession[] }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-md border border-slate-200">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <table className="w-full divide-y divide-slate-200 text-sm">
-        <thead className="bg-slate-50">
+        <thead className="bg-navy-deep/5">
           <tr>
-            <th className="px-4 py-2 text-left font-medium text-slate-600">
+            <th className="px-4 py-2 text-left font-medium text-navy-deep">
               Title
             </th>
-            <th className="px-4 py-2 text-left font-medium text-slate-600">
+            <th className="px-4 py-2 text-left font-medium text-navy-deep">
               Schedule
             </th>
-            <th className="px-4 py-2 text-left font-medium text-slate-600">
+            <th className="px-4 py-2 text-left font-medium text-navy-deep">
               Capacity
             </th>
-            <th className="px-4 py-2 text-left font-medium text-slate-600">
+            <th className="px-4 py-2 text-left font-medium text-navy-deep">
               Status
             </th>
-            <th className="px-4 py-2 text-right font-medium text-slate-600">
+            <th className="px-4 py-2 text-right font-medium text-navy-deep">
               Actions
             </th>
           </tr>
@@ -60,7 +60,7 @@ export function SessionsTable({ sessions }: { sessions: CommunitySession[] }) {
               <td className="px-4 py-2 text-right">
                 <Link
                   href={`/admin/dashboard/sessions/${session.id}/edit`}
-                  className="text-sm font-medium text-slate-700 hover:text-slate-900"
+                  className="text-sm font-medium text-navy-deep hover:text-navy-light"
                 >
                   Edit
                 </Link>
