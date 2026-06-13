@@ -3,7 +3,7 @@
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { classSessions } from "@/db/schema";
+import { communitySessions } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { sessionFormSchema } from "@/lib/validation/session";
 import type { ActionState } from "./types";
@@ -20,7 +20,7 @@ function parseSessionForm(formData: FormData) {
   });
 }
 
-export async function createClassSession(
+export async function createCommunitySession(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
@@ -34,7 +34,7 @@ export async function createClassSession(
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
-  await db.insert(classSessions).values({
+  await db.insert(communitySessions).values({
     ...parsed.data,
     createdByAdminId: Number(session.user.id),
   });
@@ -42,7 +42,7 @@ export async function createClassSession(
   redirect("/admin/dashboard");
 }
 
-export async function updateClassSession(
+export async function updateCommunitySession(
   id: number,
   _prevState: ActionState,
   formData: FormData,
@@ -58,23 +58,23 @@ export async function updateClassSession(
   }
 
   await db
-    .update(classSessions)
+    .update(communitySessions)
     .set({ ...parsed.data, updatedAt: new Date() })
-    .where(eq(classSessions.id, id));
+    .where(eq(communitySessions.id, id));
 
   redirect("/admin/dashboard");
 }
 
-export async function setClassSessionActive(id: number, isActive: boolean) {
+export async function setCommunitySessionActive(id: number, isActive: boolean) {
   const session = await auth();
   if (!session?.user) {
     throw new Error("Unauthorized");
   }
 
   await db
-    .update(classSessions)
+    .update(communitySessions)
     .set({ isActive, updatedAt: new Date() })
-    .where(eq(classSessions.id, id));
+    .where(eq(communitySessions.id, id));
 
   redirect("/admin/dashboard");
 }

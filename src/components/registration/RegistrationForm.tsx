@@ -5,13 +5,13 @@ import { FormField, ErrorMessage } from "@/components/ui/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { registerForSession } from "@/lib/actions/registration";
 
-export function RegistrationForm({ classSessionId }: { classSessionId: number }) {
+export function RegistrationForm({ communitySessionId }: { communitySessionId: number }) {
   const [state, formAction] = useActionState(registerForSession, {});
   const [childCount, setChildCount] = useState(1);
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
-      <input type="hidden" name="classSessionId" value={classSessionId} />
+      <input type="hidden" name="communitySessionId" value={communitySessionId} />
 
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-slate-900">Your information</h2>

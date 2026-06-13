@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Land of Promise",
-  description: "Class session registration for Land of Promise",
+  description: "Community session registration for Land of Promise",
 };
 
 export default function RootLayout({

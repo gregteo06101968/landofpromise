@@ -29,7 +29,7 @@ export default async function AdminDashboardLayout({
               href="/admin/dashboard"
               className="text-sm text-slate-600 hover:text-slate-900"
             >
-              Class Sessions
+              Community Sessions
             </Link>
             <Link
               href="/admin/dashboard/admins"

@@ -1,6 +1,6 @@
 # Land of Promise
 
-Admin-managed class sessions with parent registration, built with Next.js (App Router), Drizzle ORM, and Neon Postgres.
+Admin-managed community sessions with parent registration, built with Next.js (App Router), Drizzle ORM, and Neon Postgres.
 
 ## Setup
 
@@ -34,8 +34,8 @@ Admin-managed class sessions with parent registration, built with Next.js (App R
    npm run dev
    ```
 
-   - Visit `/register` to register a child for a class session as a parent.
-   - Visit `/admin/login` to sign in as an admin and manage class sessions and other admins.
+   - Visit `/register` to register a child for a community session as a parent.
+   - Visit `/admin/login` to sign in as an admin and manage community sessions and other admins.
 
 ## Database scripts
 
