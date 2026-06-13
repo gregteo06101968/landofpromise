@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { SessionForm } from "@/components/admin/SessionForm";
+import { SessionTabs } from "@/components/admin/SessionTabs";
 import { getCommunitySessionById, getRegistrationsForSession } from "@/db/queries";
 import { setCommunitySessionActive, updateCommunitySession } from "@/lib/actions/sessions";
 
@@ -36,6 +38,8 @@ export default async function EditCommunitySessionPage({
         </form>
       </div>
 
+      <SessionTabs sessionId={sessionId} active="edit" />
+
       <SessionForm action={updateCommunitySession.bind(null, sessionId)} session={session} />
 
       <div className="flex flex-col gap-3">
@@ -70,7 +74,12 @@ export default async function EditCommunitySessionPage({
                 {registrations.map((registration) => (
                   <tr key={registration.id}>
                     <td className="px-4 py-2 font-medium text-slate-900">
-                      {registration.childName}
+                      <Link
+                        href={`/admin/dashboard/sessions/${sessionId}/students/${registration.id}`}
+                        className="text-navy-deep hover:underline"
+                      >
+                        {registration.childName}
+                      </Link>
                     </td>
                     <td className="px-4 py-2 text-slate-600">
                       {registration.childBirthdate || "—"}

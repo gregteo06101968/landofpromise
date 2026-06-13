@@ -78,3 +78,74 @@ export const registrations = pgTable(
   },
   (table) => [unique().on(table.childId, table.communitySessionId)],
 );
+
+export const sessionObjectives = pgTable(
+  "session_objectives",
+  {
+    id: serial("id").primaryKey(),
+    communitySessionId: integer("community_session_id")
+      .notNull()
+      .references(() => communitySessions.id, { onDelete: "cascade" }),
+    weekNumber: integer("week_number").notNull(),
+    title: varchar("title", { length: 255 }).notNull(),
+    description: text("description"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [unique().on(table.communitySessionId, table.weekNumber)],
+);
+
+export const attendanceRecords = pgTable(
+  "attendance_records",
+  {
+    id: serial("id").primaryKey(),
+    registrationId: integer("registration_id")
+      .notNull()
+      .references(() => registrations.id, { onDelete: "cascade" }),
+    attendanceDate: date("attendance_date").notNull(),
+    present: boolean("present").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [unique().on(table.registrationId, table.attendanceDate)],
+);
+
+export const observations = pgTable("observations", {
+  id: serial("id").primaryKey(),
+  registrationId: integer("registration_id")
+    .notNull()
+    .references(() => registrations.id, { onDelete: "cascade" }),
+  note: text("note").notNull(),
+  createdByAdminId: integer("created_by_admin_id").references(() => admins.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const progressRatingEnum = pgEnum("progress_rating", [
+  "needs_improvement",
+  "developing",
+  "meets_expectations",
+  "exceeds_expectations",
+]);
+
+export const progressAssessments = pgTable("progress_assessments", {
+  id: serial("id").primaryKey(),
+  registrationId: integer("registration_id")
+    .notNull()
+    .references(() => registrations.id, { onDelete: "cascade" }),
+  rating: progressRatingEnum("rating").notNull(),
+  notes: text("notes"),
+  createdByAdminId: integer("created_by_admin_id").references(() => admins.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const mediaTypeEnum = pgEnum("media_type", ["photo", "video"]);
+
+export const sessionMedia = pgTable("session_media", {
+  id: serial("id").primaryKey(),
+  communitySessionId: integer("community_session_id")
+    .notNull()
+    .references(() => communitySessions.id, { onDelete: "cascade" }),
+  url: text("url").notNull(),
+  type: mediaTypeEnum("type").notNull(),
+  caption: varchar("caption", { length: 255 }),
+  uploadedByAdminId: integer("uploaded_by_admin_id").references(() => admins.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});

@@ -1,6 +1,17 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { admins, children, communitySessions, parents, registrations } from "@/db/schema";
+import {
+  admins,
+  attendanceRecords,
+  children,
+  communitySessions,
+  observations,
+  parents,
+  progressAssessments,
+  registrations,
+  sessionMedia,
+  sessionObjectives,
+} from "@/db/schema";
 
 export async function getActiveCommunitySessions() {
   return db
@@ -79,4 +90,98 @@ export async function listAdmins() {
     })
     .from(admins)
     .orderBy(desc(admins.createdAt));
+}
+
+export async function getSessionObjectives(communitySessionId: number) {
+  return db
+    .select()
+    .from(sessionObjectives)
+    .where(eq(sessionObjectives.communitySessionId, communitySessionId))
+    .orderBy(sessionObjectives.weekNumber);
+}
+
+export async function getAttendanceForDate(
+  communitySessionId: number,
+  attendanceDate: string,
+) {
+  return db
+    .select({
+      registrationId: registrations.id,
+      childName: children.fullName,
+      present: attendanceRecords.present,
+    })
+    .from(registrations)
+    .innerJoin(children, eq(registrations.childId, children.id))
+    .leftJoin(
+      attendanceRecords,
+      and(
+        eq(attendanceRecords.registrationId, registrations.id),
+        eq(attendanceRecords.attendanceDate, attendanceDate),
+      ),
+    )
+    .where(eq(registrations.communitySessionId, communitySessionId))
+    .orderBy(children.fullName);
+}
+
+export async function getRegistrationDetail(registrationId: number) {
+  const [row] = await db
+    .select({
+      id: registrations.id,
+      communitySessionId: registrations.communitySessionId,
+      sessionTitle: communitySessions.title,
+      childName: children.fullName,
+      childBirthdate: children.birthdate,
+      parentName: parents.name,
+      parentEmail: parents.email,
+      parentPhone: parents.phone,
+    })
+    .from(registrations)
+    .innerJoin(children, eq(registrations.childId, children.id))
+    .innerJoin(parents, eq(registrations.parentId, parents.id))
+    .innerJoin(
+      communitySessions,
+      eq(registrations.communitySessionId, communitySessions.id),
+    )
+    .where(eq(registrations.id, registrationId));
+
+  return row;
+}
+
+export async function getObservationsForRegistration(registrationId: number) {
+  return db
+    .select({
+      id: observations.id,
+      note: observations.note,
+      createdAt: observations.createdAt,
+      createdByName: admins.name,
+      createdByEmail: admins.email,
+    })
+    .from(observations)
+    .leftJoin(admins, eq(observations.createdByAdminId, admins.id))
+    .where(eq(observations.registrationId, registrationId))
+    .orderBy(desc(observations.createdAt));
+}
+
+export async function getProgressAssessmentsForRegistration(registrationId: number) {
+  return db
+    .select({
+      id: progressAssessments.id,
+      rating: progressAssessments.rating,
+      notes: progressAssessments.notes,
+      createdAt: progressAssessments.createdAt,
+      createdByName: admins.name,
+      createdByEmail: admins.email,
+    })
+    .from(progressAssessments)
+    .leftJoin(admins, eq(progressAssessments.createdByAdminId, admins.id))
+    .where(eq(progressAssessments.registrationId, registrationId))
+    .orderBy(desc(progressAssessments.createdAt));
+}
+
+export async function getSessionMedia(communitySessionId: number) {
+  return db
+    .select()
+    .from(sessionMedia)
+    .where(eq(sessionMedia.communitySessionId, communitySessionId))
+    .orderBy(desc(sessionMedia.createdAt));
 }

@@ -15,6 +15,13 @@
       "when": 1781407203371,
       "tag": "0001_rename_class_to_community",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781358072237,
+      "tag": "0002_peaceful_landau",
+      "breakpoints": true
     }
   ]
 }
