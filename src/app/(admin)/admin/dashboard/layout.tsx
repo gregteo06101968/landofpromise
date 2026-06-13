@@ -32,6 +32,12 @@ export default async function AdminDashboardLayout({
               Community Sessions
             </Link>
             <Link
+              href="/admin/dashboard/registrations"
+              className="text-sm text-cream/80 hover:text-cream"
+            >
+              Registrations
+            </Link>
+            <Link
               href="/admin/dashboard/admins"
               className="text-sm text-cream/80 hover:text-cream"
             >

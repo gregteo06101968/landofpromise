@@ -45,6 +45,30 @@ export async function getRegistrationsForSession(communitySessionId: number) {
     .orderBy(desc(registrations.registeredAt));
 }
 
+export async function getAllRegistrations() {
+  return db
+    .select({
+      id: registrations.id,
+      status: registrations.status,
+      registeredAt: registrations.registeredAt,
+      sessionId: communitySessions.id,
+      sessionTitle: communitySessions.title,
+      childName: children.fullName,
+      childBirthdate: children.birthdate,
+      parentName: parents.name,
+      parentEmail: parents.email,
+      parentPhone: parents.phone,
+    })
+    .from(registrations)
+    .innerJoin(children, eq(registrations.childId, children.id))
+    .innerJoin(parents, eq(registrations.parentId, parents.id))
+    .innerJoin(
+      communitySessions,
+      eq(registrations.communitySessionId, communitySessions.id),
+    )
+    .orderBy(desc(registrations.registeredAt));
+}
+
 export async function listAdmins() {
   return db
     .select({

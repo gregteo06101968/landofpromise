@@ -61,6 +61,37 @@ export function FormTextArea({
   );
 }
 
+export function FormSelect({
+  label,
+  name,
+  defaultValue,
+  required,
+  children,
+}: {
+  label: string;
+  name: string;
+  defaultValue?: string | number;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label htmlFor={name} className="text-sm font-medium text-navy-deep">
+        {label}
+      </label>
+      <select
+        id={name}
+        name={name}
+        defaultValue={defaultValue}
+        required={required}
+        className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+      >
+        {children}
+      </select>
+    </div>
+  );
+}
+
 export function ErrorMessage({ message }: { message?: string }) {
   if (!message) return null;
   return (

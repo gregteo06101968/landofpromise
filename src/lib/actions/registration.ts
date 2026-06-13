@@ -4,17 +4,15 @@ import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { children, communitySessions, parents, registrations } from "@/db/schema";
-import { registrationFormSchema } from "@/lib/validation/registration";
+import { auth } from "@/lib/auth";
+import { registrationFormSchema, type RegistrationFormValues } from "@/lib/validation/registration";
 import type { ActionState } from "./types";
 
-export async function registerForSession(
-  _prevState: ActionState,
-  formData: FormData,
-): Promise<ActionState> {
+function parseRegistrationForm(formData: FormData) {
   const childNames = formData.getAll("childFullName");
   const childBirthdates = formData.getAll("childBirthdate");
 
-  const parsed = registrationFormSchema.safeParse({
+  return registrationFormSchema.safeParse({
     communitySessionId: formData.get("communitySessionId"),
     parentName: formData.get("parentName"),
     parentEmail: formData.get("parentEmail"),
@@ -24,28 +22,15 @@ export async function registerForSession(
       birthdate: childBirthdates[i],
     })),
   });
+}
 
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
-  }
-
-  const { communitySessionId, parentName, parentEmail, parentPhone, children: childInputs } =
-    parsed.data;
-
-  const [session] = await db
-    .select()
-    .from(communitySessions)
-    .where(
-      and(
-        eq(communitySessions.id, communitySessionId),
-        eq(communitySessions.isActive, true),
-      ),
-    );
-
-  if (!session) {
-    return { error: "This community session is not available for registration" };
-  }
-
+async function insertRegistration({
+  communitySessionId,
+  parentName,
+  parentEmail,
+  parentPhone,
+  children: childInputs,
+}: RegistrationFormValues) {
   await db.transaction(async (tx) => {
     const [parent] = await tx
       .insert(parents)
@@ -76,6 +61,62 @@ export async function registerForSession(
         .onConflictDoNothing();
     }
   });
+}
+
+export async function registerForSession(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = parseRegistrationForm(formData);
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+  }
+
+  const [session] = await db
+    .select()
+    .from(communitySessions)
+    .where(
+      and(
+        eq(communitySessions.id, parsed.data.communitySessionId),
+        eq(communitySessions.isActive, true),
+      ),
+    );
+
+  if (!session) {
+    return { error: "This community session is not available for registration" };
+  }
+
+  await insertRegistration(parsed.data);
 
   redirect("/register/success");
+}
+
+export async function adminRegisterForSession(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const session = await auth();
+  if (!session?.user) {
+    return { error: "Unauthorized" };
+  }
+
+  const parsed = parseRegistrationForm(formData);
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+  }
+
+  const [communitySession] = await db
+    .select()
+    .from(communitySessions)
+    .where(eq(communitySessions.id, parsed.data.communitySessionId));
+
+  if (!communitySession) {
+    return { error: "Community session not found" };
+  }
+
+  await insertRegistration(parsed.data);
+
+  return { success: true };
 }
