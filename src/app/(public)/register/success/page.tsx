@@ -8,13 +8,13 @@ export default function RegistrationSuccessPage() {
       </h1>
       <p className="text-sm text-slate-600">
         Thank you for registering. We look forward to seeing your child at
-        the class session.
+        the community session.
       </p>
       <Link
         href="/register"
         className="text-sm font-medium text-slate-700 hover:text-slate-900"
       >
-        Back to class sessions
+        Back to community sessions
       </Link>
     </main>
   );

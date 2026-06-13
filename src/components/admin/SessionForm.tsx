@@ -4,16 +4,16 @@ import { useActionState } from "react";
 import { FormField, FormTextArea, ErrorMessage } from "@/components/ui/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import type { ActionState } from "@/lib/actions/types";
-import type { classSessions } from "@/db/schema";
+import type { communitySessions } from "@/db/schema";
 
-type ClassSession = typeof classSessions.$inferSelect;
+type CommunitySession = typeof communitySessions.$inferSelect;
 
 export function SessionForm({
   action,
   session,
 }: {
   action: (prevState: ActionState, formData: FormData) => Promise<ActionState>;
-  session?: ClassSession;
+  session?: CommunitySession;
 }) {
   const [state, formAction] = useActionState(action, {});
 

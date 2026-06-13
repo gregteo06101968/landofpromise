@@ -1,13 +1,13 @@
 import Link from "next/link";
-import type { classSessions } from "@/db/schema";
+import type { communitySessions } from "@/db/schema";
 
-type ClassSession = typeof classSessions.$inferSelect;
+type CommunitySession = typeof communitySessions.$inferSelect;
 
-export function SessionsTable({ sessions }: { sessions: ClassSession[] }) {
+export function SessionsTable({ sessions }: { sessions: CommunitySession[] }) {
   if (sessions.length === 0) {
     return (
       <p className="text-sm text-slate-500">
-        No class sessions yet. Create one to get started.
+        No community sessions yet. Create one to get started.
       </p>
     );
   }

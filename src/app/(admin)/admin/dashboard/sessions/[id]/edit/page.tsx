@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import { SessionForm } from "@/components/admin/SessionForm";
-import { getClassSessionById, getRegistrationsForSession } from "@/db/queries";
-import { setClassSessionActive, updateClassSession } from "@/lib/actions/sessions";
+import { getCommunitySessionById, getRegistrationsForSession } from "@/db/queries";
+import { setCommunitySessionActive, updateCommunitySession } from "@/lib/actions/sessions";
 
-export default async function EditClassSessionPage({
+export default async function EditCommunitySessionPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -12,7 +12,7 @@ export default async function EditClassSessionPage({
   const sessionId = Number(id);
 
   const [session, registrations] = await Promise.all([
-    getClassSessionById(sessionId),
+    getCommunitySessionById(sessionId),
     getRegistrationsForSession(sessionId),
   ]);
 
@@ -24,9 +24,9 @@ export default async function EditClassSessionPage({
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-slate-900">
-          Edit Class Session
+          Edit Community Session
         </h1>
-        <form action={setClassSessionActive.bind(null, sessionId, !session.isActive)}>
+        <form action={setCommunitySessionActive.bind(null, sessionId, !session.isActive)}>
           <button
             type="submit"
             className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
@@ -36,7 +36,7 @@ export default async function EditClassSessionPage({
         </form>
       </div>
 
-      <SessionForm action={updateClassSession.bind(null, sessionId)} session={session} />
+      <SessionForm action={updateCommunitySession.bind(null, sessionId)} session={session} />
 
       <div className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold text-slate-900">

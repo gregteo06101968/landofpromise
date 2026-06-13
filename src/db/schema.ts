@@ -38,7 +38,7 @@ export const children = pgTable("children", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const classSessions = pgTable("class_sessions", {
+export const communitySessions = pgTable("community_sessions", {
   id: serial("id").primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description"),
@@ -67,14 +67,14 @@ export const registrations = pgTable(
     childId: integer("child_id")
       .notNull()
       .references(() => children.id, { onDelete: "cascade" }),
-    classSessionId: integer("class_session_id")
+    communitySessionId: integer("community_session_id")
       .notNull()
-      .references(() => classSessions.id, { onDelete: "cascade" }),
+      .references(() => communitySessions.id, { onDelete: "cascade" }),
     parentId: integer("parent_id")
       .notNull()
       .references(() => parents.id, { onDelete: "cascade" }),
     status: registrationStatusEnum("status").default("confirmed").notNull(),
     registeredAt: timestamp("registered_at").defaultNow().notNull(),
   },
-  (table) => [unique().on(table.childId, table.classSessionId)],
+  (table) => [unique().on(table.childId, table.communitySessionId)],
 );

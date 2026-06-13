@@ -7,7 +7,7 @@ export default function Home() {
         Land of Promise
       </h1>
       <p className="max-w-md text-base text-slate-600">
-        Register your child for an upcoming class session.
+        Register your child for an upcoming community session.
       </p>
       <div className="flex flex-col gap-3 sm:flex-row">
         <Link

@@ -3,7 +3,7 @@
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { children, classSessions, parents, registrations } from "@/db/schema";
+import { children, communitySessions, parents, registrations } from "@/db/schema";
 import { registrationFormSchema } from "@/lib/validation/registration";
 import type { ActionState } from "./types";
 
@@ -15,7 +15,7 @@ export async function registerForSession(
   const childBirthdates = formData.getAll("childBirthdate");
 
   const parsed = registrationFormSchema.safeParse({
-    classSessionId: formData.get("classSessionId"),
+    communitySessionId: formData.get("communitySessionId"),
     parentName: formData.get("parentName"),
     parentEmail: formData.get("parentEmail"),
     parentPhone: formData.get("parentPhone"),
@@ -29,21 +29,21 @@ export async function registerForSession(
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
-  const { classSessionId, parentName, parentEmail, parentPhone, children: childInputs } =
+  const { communitySessionId, parentName, parentEmail, parentPhone, children: childInputs } =
     parsed.data;
 
   const [session] = await db
     .select()
-    .from(classSessions)
+    .from(communitySessions)
     .where(
       and(
-        eq(classSessions.id, classSessionId),
-        eq(classSessions.isActive, true),
+        eq(communitySessions.id, communitySessionId),
+        eq(communitySessions.isActive, true),
       ),
     );
 
   if (!session) {
-    return { error: "This class session is not available for registration" };
+    return { error: "This community session is not available for registration" };
   }
 
   await db.transaction(async (tx) => {
@@ -70,7 +70,7 @@ export async function registerForSession(
         .insert(registrations)
         .values({
           childId: insertedChild.id,
-          classSessionId,
+          communitySessionId,
           parentId: parent.id,
         })
         .onConflictDoNothing();

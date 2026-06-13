@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getClassSessionById } from "@/db/queries";
+import { getCommunitySessionById } from "@/db/queries";
 import { RegistrationForm } from "@/components/registration/RegistrationForm";
 
 export const dynamic = "force-dynamic";
@@ -10,8 +10,8 @@ export default async function RegisterForSessionPage({
   params: Promise<{ sessionId: string }>;
 }) {
   const { sessionId } = await params;
-  const classSessionId = Number(sessionId);
-  const session = await getClassSessionById(classSessionId);
+  const communitySessionId = Number(sessionId);
+  const session = await getCommunitySessionById(communitySessionId);
 
   if (!session || !session.isActive) {
     notFound();
@@ -27,7 +27,7 @@ export default async function RegisterForSessionPage({
           <p className="mt-1 text-sm text-slate-600">{session.schedule}</p>
         )}
       </div>
-      <RegistrationForm classSessionId={classSessionId} />
+      <RegistrationForm communitySessionId={communitySessionId} />
     </main>
   );
 }

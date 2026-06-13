@@ -8,7 +8,7 @@ export const childSchema = z.object({
 });
 
 export const registrationFormSchema = z.object({
-  classSessionId: z.coerce.number().int().positive(),
+  communitySessionId: z.coerce.number().int().positive(),
   parentName: z.string().trim().min(1, "Your name is required").max(255),
   parentEmail: z.string().trim().toLowerCase().email("Enter a valid email"),
   parentPhone: z.preprocess(

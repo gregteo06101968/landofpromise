@@ -1,13 +1,13 @@
 import { SessionForm } from "@/components/admin/SessionForm";
-import { createClassSession } from "@/lib/actions/sessions";
+import { createCommunitySession } from "@/lib/actions/sessions";
 
-export default function NewClassSessionPage() {
+export default function NewCommunitySessionPage() {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold text-slate-900">
-        New Class Session
+        New Community Session
       </h1>
-      <SessionForm action={createClassSession} />
+      <SessionForm action={createCommunitySession} />
     </div>
   );
 }

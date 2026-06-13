@@ -1,32 +1,32 @@
 import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { admins, children, classSessions, parents, registrations } from "@/db/schema";
+import { admins, children, communitySessions, parents, registrations } from "@/db/schema";
 
-export async function getActiveClassSessions() {
+export async function getActiveCommunitySessions() {
   return db
     .select()
-    .from(classSessions)
-    .where(eq(classSessions.isActive, true))
-    .orderBy(desc(classSessions.createdAt));
+    .from(communitySessions)
+    .where(eq(communitySessions.isActive, true))
+    .orderBy(desc(communitySessions.createdAt));
 }
 
-export async function getAllClassSessions() {
+export async function getAllCommunitySessions() {
   return db
     .select()
-    .from(classSessions)
-    .orderBy(desc(classSessions.createdAt));
+    .from(communitySessions)
+    .orderBy(desc(communitySessions.createdAt));
 }
 
-export async function getClassSessionById(id: number) {
+export async function getCommunitySessionById(id: number) {
   const [session] = await db
     .select()
-    .from(classSessions)
-    .where(eq(classSessions.id, id));
+    .from(communitySessions)
+    .where(eq(communitySessions.id, id));
 
   return session;
 }
 
-export async function getRegistrationsForSession(classSessionId: number) {
+export async function getRegistrationsForSession(communitySessionId: number) {
   return db
     .select({
       id: registrations.id,
@@ -41,7 +41,7 @@ export async function getRegistrationsForSession(classSessionId: number) {
     .from(registrations)
     .innerJoin(children, eq(registrations.childId, children.id))
     .innerJoin(parents, eq(registrations.parentId, parents.id))
-    .where(eq(registrations.classSessionId, classSessionId))
+    .where(eq(registrations.communitySessionId, communitySessionId))
     .orderBy(desc(registrations.registeredAt));
 }
 

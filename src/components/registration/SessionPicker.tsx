@@ -1,13 +1,13 @@
 import Link from "next/link";
-import type { classSessions } from "@/db/schema";
+import type { communitySessions } from "@/db/schema";
 
-type ClassSession = typeof classSessions.$inferSelect;
+type CommunitySession = typeof communitySessions.$inferSelect;
 
-export function SessionPicker({ sessions }: { sessions: ClassSession[] }) {
+export function SessionPicker({ sessions }: { sessions: CommunitySession[] }) {
   if (sessions.length === 0) {
     return (
       <p className="text-sm text-slate-500">
-        There are no class sessions open for registration right now. Please
+        There are no community sessions open for registration right now. Please
         check back later.
       </p>
     );

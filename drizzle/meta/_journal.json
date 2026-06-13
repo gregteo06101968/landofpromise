@@ -8,6 +8,13 @@
       "when": 1781275203371,
       "tag": "0000_quiet_boomerang",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781407203371,
+      "tag": "0001_rename_class_to_community",
+      "breakpoints": true
     }
   ]
 }
