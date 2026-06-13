@@ -94,6 +94,21 @@ export const sessionObjectives = pgTable(
   (table) => [unique().on(table.communitySessionId, table.weekNumber)],
 );
 
+export const objectiveSessionRuns = pgTable("objective_session_runs", {
+  id: serial("id").primaryKey(),
+  sessionObjectiveId: integer("session_objective_id")
+    .notNull()
+    .references(() => sessionObjectives.id, { onDelete: "cascade" }),
+  communitySessionId: integer("community_session_id")
+    .notNull()
+    .references(() => communitySessions.id, { onDelete: "cascade" }),
+  startedAt: timestamp("started_at").notNull(),
+  endedAt: timestamp("ended_at").notNull(),
+  durationSeconds: integer("duration_seconds").notNull(),
+  createdByAdminId: integer("created_by_admin_id").references(() => admins.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const attendanceRecords = pgTable(
   "attendance_records",
   {
@@ -103,6 +118,9 @@ export const attendanceRecords = pgTable(
       .references(() => registrations.id, { onDelete: "cascade" }),
     attendanceDate: date("attendance_date").notNull(),
     present: boolean("present").default(true).notNull(),
+    sessionRunId: integer("session_run_id").references(() => objectiveSessionRuns.id, {
+      onDelete: "set null",
+    }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => [unique().on(table.registrationId, table.attendanceDate)],
@@ -114,6 +132,9 @@ export const observations = pgTable("observations", {
     .notNull()
     .references(() => registrations.id, { onDelete: "cascade" }),
   note: text("note").notNull(),
+  sessionRunId: integer("session_run_id").references(() => objectiveSessionRuns.id, {
+    onDelete: "cascade",
+  }),
   createdByAdminId: integer("created_by_admin_id").references(() => admins.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

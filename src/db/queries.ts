@@ -1,10 +1,11 @@
-import { and, desc, eq, notInArray } from "drizzle-orm";
+import { and, desc, eq, inArray, notInArray } from "drizzle-orm";
 import { db } from "@/db";
 import {
   admins,
   attendanceRecords,
   children,
   communitySessions,
+  objectiveSessionRuns,
   observations,
   parents,
   progressAssessments,
@@ -98,6 +99,15 @@ export async function getSessionObjectives(communitySessionId: number) {
     .from(sessionObjectives)
     .where(eq(sessionObjectives.communitySessionId, communitySessionId))
     .orderBy(sessionObjectives.weekNumber);
+}
+
+export async function getSessionObjectiveById(id: number) {
+  const [objective] = await db
+    .select()
+    .from(sessionObjectives)
+    .where(eq(sessionObjectives.id, id));
+
+  return objective;
 }
 
 export async function getChildrenNotInSession(communitySessionId: number) {
@@ -202,4 +212,92 @@ export async function getSessionMedia(communitySessionId: number) {
     .from(sessionMedia)
     .where(eq(sessionMedia.communitySessionId, communitySessionId))
     .orderBy(desc(sessionMedia.createdAt));
+}
+
+export async function getSessionRunsForObjective(sessionObjectiveId: number) {
+  const runs = await db
+    .select({
+      id: objectiveSessionRuns.id,
+      startedAt: objectiveSessionRuns.startedAt,
+      endedAt: objectiveSessionRuns.endedAt,
+      durationSeconds: objectiveSessionRuns.durationSeconds,
+    })
+    .from(objectiveSessionRuns)
+    .where(eq(objectiveSessionRuns.sessionObjectiveId, sessionObjectiveId))
+    .orderBy(desc(objectiveSessionRuns.startedAt));
+
+  if (runs.length === 0) {
+    return [];
+  }
+
+  const runIds = runs.map((run) => run.id);
+
+  const attendance = await db
+    .select({
+      sessionRunId: attendanceRecords.sessionRunId,
+      present: attendanceRecords.present,
+    })
+    .from(attendanceRecords)
+    .where(inArray(attendanceRecords.sessionRunId, runIds));
+
+  const counts = new Map<number, { present: number; total: number }>();
+  for (const row of attendance) {
+    if (row.sessionRunId === null) continue;
+    const entry = counts.get(row.sessionRunId) ?? { present: 0, total: 0 };
+    entry.total += 1;
+    if (row.present) entry.present += 1;
+    counts.set(row.sessionRunId, entry);
+  }
+
+  return runs.map((run) => ({
+    ...run,
+    presentCount: counts.get(run.id)?.present ?? 0,
+    totalCount: counts.get(run.id)?.total ?? 0,
+  }));
+}
+
+export async function getSessionRunDetail(runId: number) {
+  const [run] = await db
+    .select({
+      id: objectiveSessionRuns.id,
+      sessionObjectiveId: objectiveSessionRuns.sessionObjectiveId,
+      communitySessionId: objectiveSessionRuns.communitySessionId,
+      startedAt: objectiveSessionRuns.startedAt,
+      endedAt: objectiveSessionRuns.endedAt,
+      durationSeconds: objectiveSessionRuns.durationSeconds,
+    })
+    .from(objectiveSessionRuns)
+    .where(eq(objectiveSessionRuns.id, runId));
+
+  if (!run) {
+    return undefined;
+  }
+
+  const rows = await db
+    .select({
+      registrationId: registrations.id,
+      childName: children.fullName,
+      present: attendanceRecords.present,
+      note: observations.note,
+    })
+    .from(registrations)
+    .innerJoin(children, eq(registrations.childId, children.id))
+    .leftJoin(
+      attendanceRecords,
+      and(
+        eq(attendanceRecords.registrationId, registrations.id),
+        eq(attendanceRecords.sessionRunId, runId),
+      ),
+    )
+    .leftJoin(
+      observations,
+      and(
+        eq(observations.registrationId, registrations.id),
+        eq(observations.sessionRunId, runId),
+      ),
+    )
+    .where(eq(registrations.communitySessionId, run.communitySessionId))
+    .orderBy(children.fullName);
+
+  return { ...run, rows };
 }

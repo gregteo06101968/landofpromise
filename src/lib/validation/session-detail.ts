@@ -46,3 +46,16 @@ export const mediaCaptionSchema = z.preprocess(
   emptyToUndefined,
   z.string().trim().max(255).optional(),
 );
+
+export const sessionRunFormSchema = z.object({
+  startedAt: z.string().min(1, "Start time is required"),
+  registrationIds: z.array(z.coerce.number().int().positive()),
+  presentIds: z.array(z.coerce.number().int().positive()),
+});
+
+export type SessionRunFormValues = z.infer<typeof sessionRunFormSchema>;
+
+export const sessionRunNoteSchema = z.preprocess(
+  emptyToUndefined,
+  z.string().trim().max(2000).optional(),
+);
