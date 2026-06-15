@@ -15,20 +15,22 @@ export function SessionTabs({
   active: (typeof tabs)[number]["key"];
 }) {
   return (
-    <div className="flex gap-4 border-b border-slate-200">
-      {tabs.map((tab) => (
-        <Link
-          key={tab.key}
-          href={`/admin/dashboard/sessions/${sessionId}/${tab.key}`}
-          className={`-mb-px border-b-2 px-1 py-2 text-sm font-medium ${
-            active === tab.key
-              ? "border-gold text-navy-deep"
-              : "border-transparent text-slate-500 hover:text-navy-deep"
-          }`}
-        >
-          {tab.label}
-        </Link>
-      ))}
+    <div className="overflow-x-auto border-b border-slate-200">
+      <div className="flex w-max min-w-full gap-4">
+        {tabs.map((tab) => (
+          <Link
+            key={tab.key}
+            href={`/admin/dashboard/sessions/${sessionId}/${tab.key}`}
+            className={`-mb-px border-b-2 px-1 py-2 text-sm font-medium whitespace-nowrap ${
+              active === tab.key
+                ? "border-gold text-navy-deep"
+                : "border-transparent text-slate-500 hover:text-navy-deep"
+            }`}
+          >
+            {tab.label}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

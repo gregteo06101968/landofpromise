@@ -4,7 +4,7 @@ export function StatCard({
   accent = "text-navy-deep",
 }: {
   label: string;
-  value: number;
+  value: number | string;
   accent?: string;
 }) {
   return (

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { deleteSessionRun } from "@/lib/actions/sessionRuns";
+import { StatCard } from "@/components/admin/StatCard";
 
 type SessionRunRow = {
   id: number;
@@ -44,46 +45,71 @@ export function SessionRunsList({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-        <div>
-          <p className="text-xs font-medium uppercase text-slate-500">Total sessions</p>
-          <p className="font-display text-xl font-bold text-navy-deep">{totalRuns}</p>
-        </div>
-        <div>
-          <p className="text-xs font-medium uppercase text-slate-500">Average duration</p>
-          <p className="font-display text-xl font-bold text-navy-deep">
-            {formatDuration(avgDurationSeconds)}
-          </p>
-        </div>
-        <div>
-          <p className="text-xs font-medium uppercase text-slate-500">Average attendance</p>
-          <p className="font-display text-xl font-bold text-navy-deep">
-            {avgAttendanceRate === null ? "—" : `${avgAttendanceRate}%`}
-          </p>
-        </div>
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        <StatCard label="Total sessions" value={totalRuns} />
+        <StatCard label="Average duration" value={formatDuration(avgDurationSeconds)} />
+        <StatCard
+          label="Average attendance"
+          value={avgAttendanceRate === null ? "—" : `${avgAttendanceRate}%`}
+        />
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      {/* Card layout for small screens */}
+      <div className="flex flex-col gap-3 sm:hidden">
+        {runs.map((run) => (
+          <div key={run.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="font-medium text-slate-900">{new Date(run.startedAt).toLocaleString()}</p>
+            <dl className="mt-2 space-y-1 text-sm text-slate-600">
+              <div className="flex justify-between gap-2">
+                <dt className="text-slate-400">Duration</dt>
+                <dd>{formatDuration(run.durationSeconds)}</dd>
+              </div>
+              <div className="flex justify-between gap-2">
+                <dt className="text-slate-400">Attendance</dt>
+                <dd>
+                  {run.presentCount} / {run.totalCount}
+                </dd>
+              </div>
+            </dl>
+            <div className="mt-3 flex items-center gap-3">
+              <Link
+                href={`/admin/dashboard/sessions/${communitySessionId}/objectives/${sessionObjectiveId}/history/${run.id}`}
+                className="text-sm font-medium text-navy-deep hover:underline"
+              >
+                View
+              </Link>
+              <form action={deleteSessionRun.bind(null, run.id, communitySessionId, sessionObjectiveId)}>
+                <button type="submit" className="text-sm font-medium text-red-600 hover:text-red-700">
+                  Delete
+                </button>
+              </form>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Table layout for larger screens */}
+      <div className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:block">
         <table className="w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-navy-deep/5">
+          <thead className="bg-slate-50">
             <tr>
-              <th className="px-4 py-2 text-left font-medium text-navy-deep">Date</th>
-              <th className="px-4 py-2 text-left font-medium text-navy-deep">Duration</th>
-              <th className="px-4 py-2 text-left font-medium text-navy-deep">Attendance</th>
-              <th className="px-4 py-2 text-left font-medium text-navy-deep"></th>
+              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Date</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Duration</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Attendance</th>
+              <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {runs.map((run) => (
-              <tr key={run.id}>
-                <td className="px-4 py-2 font-medium text-slate-900">
+              <tr key={run.id} className="transition hover:bg-slate-50">
+                <td className="px-6 py-3 font-medium text-slate-900">
                   {new Date(run.startedAt).toLocaleString()}
                 </td>
-                <td className="px-4 py-2 text-slate-600">{formatDuration(run.durationSeconds)}</td>
-                <td className="px-4 py-2 text-slate-600">
+                <td className="px-6 py-3 text-slate-600">{formatDuration(run.durationSeconds)}</td>
+                <td className="px-6 py-3 text-slate-600">
                   {run.presentCount} / {run.totalCount}
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-6 py-3 text-right">
                   <div className="flex items-center justify-end gap-3">
                     <Link
                       href={`/admin/dashboard/sessions/${communitySessionId}/objectives/${sessionObjectiveId}/history/${run.id}`}

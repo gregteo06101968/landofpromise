@@ -1,26 +1,8 @@
 import Link from "next/link";
 import type { communitySessions } from "@/db/schema";
+import { StatusBadge } from "@/components/admin/StatusBadge";
 
 type CommunitySession = typeof communitySessions.$inferSelect;
-
-function StatusBadge({ isActive }: { isActive: boolean }) {
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-        isActive
-          ? "bg-green-100 text-green-700"
-          : "bg-slate-100 text-slate-500"
-      }`}
-    >
-      <span
-        className={`h-1.5 w-1.5 rounded-full ${
-          isActive ? "bg-green-500" : "bg-slate-400"
-        }`}
-      />
-      {isActive ? "Active" : "Inactive"}
-    </span>
-  );
-}
 
 export function SessionsTable({ sessions }: { sessions: CommunitySession[] }) {
   if (sessions.length === 0) {
@@ -44,7 +26,7 @@ export function SessionsTable({ sessions }: { sessions: CommunitySession[] }) {
           >
             <div className="flex items-start justify-between gap-2">
               <p className="font-medium text-slate-900">{session.title}</p>
-              <StatusBadge isActive={session.isActive} />
+              <StatusBadge label={session.isActive ? "Active" : "Inactive"} color={session.isActive ? "green" : "slate"} />
             </div>
             <dl className="mt-2 space-y-1 text-sm text-slate-600">
               <div className="flex justify-between gap-2">
@@ -101,7 +83,7 @@ export function SessionsTable({ sessions }: { sessions: CommunitySession[] }) {
                   {session.capacity ?? "Unlimited"}
                 </td>
                 <td className="px-6 py-3">
-                  <StatusBadge isActive={session.isActive} />
+                  <StatusBadge label={session.isActive ? "Active" : "Inactive"} color={session.isActive ? "green" : "slate"} />
                 </td>
                 <td className="px-6 py-3 text-right">
                   <Link

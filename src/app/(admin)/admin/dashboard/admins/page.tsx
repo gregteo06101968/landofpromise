@@ -7,7 +7,10 @@ export default async function AdminsPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="font-display text-2xl font-bold text-navy-deep">Admins</h1>
+      <div>
+        <h1 className="font-display text-2xl font-bold text-navy-deep">Admins</h1>
+        <p className="mt-1 text-sm text-slate-500">Manage who can access this dashboard.</p>
+      </div>
 
       <div className="flex flex-col gap-3">
         <h2 className="font-display text-lg font-semibold text-navy-deep">

@@ -32,17 +32,17 @@ export function AttendanceForm({
       <input type="hidden" name="attendanceDate" value={attendanceDate} />
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-navy-deep/5">
+          <thead className="bg-slate-50">
             <tr>
-              <th className="px-4 py-2 text-left font-medium text-navy-deep">Child</th>
-              <th className="px-4 py-2 text-left font-medium text-navy-deep">Present</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Child</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Present</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {rows.map((row) => (
-              <tr key={row.registrationId}>
-                <td className="px-4 py-2 font-medium text-slate-900">{row.childName}</td>
-                <td className="px-4 py-2">
+              <tr key={row.registrationId} className="transition hover:bg-slate-50">
+                <td className="px-6 py-3 font-medium text-slate-900">{row.childName}</td>
+                <td className="px-6 py-3">
                   <input
                     type="checkbox"
                     name="present"
