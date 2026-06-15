@@ -28,7 +28,7 @@ export default async function AdminDashboardLayout({
             alt="Land of Promise"
             width={5355}
             height={449}
-            className="h-7 w-auto py-1 sm:h-8"
+            className="h-7 w-auto flex-shrink-0 py-1 sm:h-8"
             priority
           />
 
