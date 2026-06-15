@@ -58,7 +58,7 @@ export function AttendanceForm({
       </div>
       <ErrorMessage message={state.error} />
       <div>
-        <SubmitButton pendingText="Saving...">Save attendance</SubmitButton>
+        <SubmitButton pendingText="Saving...">Save</SubmitButton>
       </div>
     </form>
   );
