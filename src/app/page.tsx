@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { SkyBackground } from "@/components/SkyBackground";
 import { LandingCard } from "@/components/LandingCard";
@@ -10,9 +11,14 @@ export default function Home() {
           Child&apos;s Information Program
         </span>
 
-        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-gold/20 to-gold/40 text-4xl">
-          📖
-        </div>
+        <Image
+          src="/logo.png"
+          alt="Land of Promise"
+          width={6000}
+          height={1173}
+          className="mb-6 h-auto w-64 max-w-full sm:w-72"
+          priority
+        />
 
         <h1 className="font-display text-4xl font-bold leading-tight sm:text-5xl">
           <span className="block text-navy-deep">Land of</span>
