@@ -26,9 +26,9 @@ export default async function AdminDashboardLayout({
           <Image
             src="/logo-header.png"
             alt="Land of Promise"
-            width={6156}
-            height={1206}
-            className="h-5 w-auto sm:h-6"
+            width={5916}
+            height={966}
+            className="h-6 w-auto sm:h-7"
             priority
           />
 
