@@ -26,8 +26,8 @@ export default async function AdminDashboardPage() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard label="Total sessions" value={sessions.length} />
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        <StatCard label="Total" value={sessions.length} />
         <StatCard label="Active" value={activeCount} accent="text-green-600" />
         <StatCard
           label="Inactive"
