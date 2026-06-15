@@ -58,27 +58,30 @@ export async function getRegistrationsForSession(communitySessionId: number) {
 }
 
 export async function getAllRegistrations() {
-  return db
+  const rows = await db
     .select({
       id: registrations.id,
-      status: registrations.status,
       registeredAt: registrations.registeredAt,
-      sessionId: communitySessions.id,
-      sessionTitle: communitySessions.title,
       childName: children.fullName,
-      childBirthdate: children.birthdate,
       parentName: parents.name,
       parentEmail: parents.email,
-      parentPhone: parents.phone,
     })
     .from(registrations)
     .innerJoin(children, eq(registrations.childId, children.id))
     .innerJoin(parents, eq(registrations.parentId, parents.id))
-    .innerJoin(
-      communitySessions,
-      eq(registrations.communitySessionId, communitySessions.id),
-    )
     .orderBy(desc(registrations.registeredAt));
+
+  // Collapse multiple session registrations for the same child/parent
+  // down to a single row, keeping the most recent one.
+  const seen = new Set<string>();
+  const deduped: typeof rows = [];
+  for (const row of rows) {
+    const key = `${row.parentEmail}|${row.childName.trim().toLowerCase()}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(row);
+  }
+  return deduped;
 }
 
 export async function listAdmins() {
