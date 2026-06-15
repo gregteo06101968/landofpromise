@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { deleteRegistration } from "@/lib/actions/registration";
+
 type RegistrationRow = {
   id: number;
   childName: string;
@@ -24,6 +27,9 @@ export function RegistrationsTable({ registrations }: { registrations: Registrat
             <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
               Parent
             </th>
+            <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
@@ -31,6 +37,21 @@ export function RegistrationsTable({ registrations }: { registrations: Registrat
             <tr key={registration.id} className="transition hover:bg-slate-50">
               <td className="px-6 py-3 font-medium text-slate-900">{registration.childName}</td>
               <td className="px-6 py-3 text-slate-600">{registration.parentName}</td>
+              <td className="px-6 py-3 text-right">
+                <div className="flex items-center justify-end gap-3">
+                  <Link
+                    href={`/admin/dashboard/registrations/${registration.id}/edit`}
+                    className="text-sm font-medium text-navy-deep hover:underline"
+                  >
+                    Edit
+                  </Link>
+                  <form action={deleteRegistration.bind(null, registration.id)}>
+                    <button type="submit" className="text-sm font-medium text-red-600 hover:text-red-700">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>

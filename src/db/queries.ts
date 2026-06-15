@@ -175,6 +175,26 @@ export async function getRegistrationDetail(registrationId: number) {
   return row;
 }
 
+export async function getRegistrationForEdit(registrationId: number) {
+  const [row] = await db
+    .select({
+      id: registrations.id,
+      childId: registrations.childId,
+      parentId: registrations.parentId,
+      childName: children.fullName,
+      childBirthdate: children.birthdate,
+      parentName: parents.name,
+      parentEmail: parents.email,
+      parentPhone: parents.phone,
+    })
+    .from(registrations)
+    .innerJoin(children, eq(registrations.childId, children.id))
+    .innerJoin(parents, eq(registrations.parentId, parents.id))
+    .where(eq(registrations.id, registrationId));
+
+  return row;
+}
+
 export async function getObservationsForRegistration(registrationId: number) {
   return db
     .select({
