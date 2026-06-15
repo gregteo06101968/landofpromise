@@ -1,22 +1,7 @@
-import { StatusBadge } from "@/components/admin/StatusBadge";
-
 type RegistrationRow = {
   id: number;
-  status: "pending" | "confirmed" | "cancelled";
-  registeredAt: Date;
-  sessionId: number;
-  sessionTitle: string;
   childName: string;
-  childBirthdate: string | null;
   parentName: string;
-  parentEmail: string;
-  parentPhone: string | null;
-};
-
-const statusColors: Record<RegistrationRow["status"], "green" | "yellow" | "red"> = {
-  confirmed: "green",
-  pending: "yellow",
-  cancelled: "red",
 };
 
 export function RegistrationsTable({ registrations }: { registrations: RegistrationRow[] }) {
@@ -29,100 +14,27 @@ export function RegistrationsTable({ registrations }: { registrations: Registrat
   }
 
   return (
-    <>
-      {/* Card layout for small screens */}
-      <div className="flex flex-col gap-3 lg:hidden">
-        {registrations.map((registration) => (
-          <div
-            key={registration.id}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
-          >
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="font-medium text-slate-900">{registration.childName}</p>
-                <p className="text-xs text-slate-500">{registration.sessionTitle}</p>
-              </div>
-              <StatusBadge label={registration.status} color={statusColors[registration.status]} />
-            </div>
-            <dl className="mt-2 space-y-1 text-sm text-slate-600">
-              <div className="flex justify-between gap-2">
-                <dt className="text-slate-400">Birthdate</dt>
-                <dd>{registration.childBirthdate || "—"}</dd>
-              </div>
-              <div className="flex justify-between gap-2">
-                <dt className="text-slate-400">Parent</dt>
-                <dd className="text-right">{registration.parentName}</dd>
-              </div>
-              <div className="flex justify-between gap-2">
-                <dt className="text-slate-400">Contact</dt>
-                <dd className="text-right">
-                  <div>{registration.parentEmail}</div>
-                  {registration.parentPhone && <div>{registration.parentPhone}</div>}
-                </dd>
-              </div>
-              <div className="flex justify-between gap-2">
-                <dt className="text-slate-400">Registered</dt>
-                <dd>{registration.registeredAt.toLocaleDateString()}</dd>
-              </div>
-            </dl>
-          </div>
-        ))}
-      </div>
-
-      {/* Table layout for larger screens */}
-      <div className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:block">
-        <table className="w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Session
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Child
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Birthdate
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Parent
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Contact
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Registered
-              </th>
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <table className="w-full divide-y divide-slate-200 text-sm">
+        <thead className="bg-slate-50">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Child
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Parent
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-100">
+          {registrations.map((registration) => (
+            <tr key={registration.id} className="transition hover:bg-slate-50">
+              <td className="px-6 py-3 font-medium text-slate-900">{registration.childName}</td>
+              <td className="px-6 py-3 text-slate-600">{registration.parentName}</td>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {registrations.map((registration) => (
-              <tr key={registration.id} className="transition hover:bg-slate-50">
-                <td className="px-6 py-3 font-medium text-slate-900">
-                  {registration.sessionTitle}
-                </td>
-                <td className="px-6 py-3 text-slate-600">{registration.childName}</td>
-                <td className="px-6 py-3 text-slate-600">
-                  {registration.childBirthdate || "—"}
-                </td>
-                <td className="px-6 py-3 text-slate-600">{registration.parentName}</td>
-                <td className="px-6 py-3 text-slate-600">
-                  <div>{registration.parentEmail}</div>
-                  {registration.parentPhone && <div>{registration.parentPhone}</div>}
-                </td>
-                <td className="px-6 py-3">
-                  <StatusBadge label={registration.status} color={statusColors[registration.status]} />
-                </td>
-                <td className="px-6 py-3 text-slate-600">
-                  {registration.registeredAt.toLocaleDateString()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
