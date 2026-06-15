@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { AuthError } from "next-auth";
 import { auth, signIn } from "@/lib/auth";
 import { FormField, ErrorMessage } from "@/components/ui/FormField";
@@ -54,6 +55,12 @@ export default async function AdminLoginPage({
   return (
     <SkyBackground>
       <LandingCard className="max-w-sm">
+        <Link
+          href="/"
+          className="mb-4 flex items-center gap-1 text-sm font-medium text-slate-500 transition hover:text-navy-deep"
+        >
+          ← Back to home
+        </Link>
         <span className="mb-4 inline-flex rounded-2xl bg-gold/15 px-4 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-gold sm:text-xs sm:tracking-widest">
           Child&apos;s Information Program
         </span>

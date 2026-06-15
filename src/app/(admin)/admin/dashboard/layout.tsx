@@ -14,7 +14,7 @@ export default async function AdminDashboardLayout({
 
   async function logout() {
     "use server";
-    await signOut({ redirectTo: "/admin/login" });
+    await signOut({ redirectTo: "/" });
   }
 
   return (
