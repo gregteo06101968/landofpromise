@@ -29,14 +29,12 @@ export function SessionPicker({ sessions }: { sessions: CommunitySession[] }) {
           {session.description && (
             <p className="text-sm text-slate-600">{session.description}</p>
           )}
-          <div>
-            <Link
-              href={`/register/${session.id}`}
-              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-navy-deep to-navy-light px-4 py-2 text-sm font-semibold text-cream shadow-md transition hover:opacity-90"
-            >
-              Register
-            </Link>
-          </div>
+          <Link
+            href={`/register/${session.id}`}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-navy-deep to-navy-light px-6 py-3 text-sm font-semibold text-cream shadow-lg transition hover:opacity-90 sm:text-base"
+          >
+            <span aria-hidden>✦</span> Register
+          </Link>
         </div>
       ))}
     </div>
