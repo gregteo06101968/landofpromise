@@ -11,7 +11,7 @@ export function MobileNav({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="sm:hidden">
+    <div>
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/lib/auth";
-import { NavLink } from "@/components/admin/NavLink";
 import { MobileNav } from "@/components/admin/MobileNav";
 
 export default async function AdminDashboardLayout({
@@ -31,23 +30,6 @@ export default async function AdminDashboardLayout({
             className="h-7 w-auto flex-shrink-0 py-1 sm:h-8"
             priority
           />
-
-          <div className="hidden items-center gap-1 sm:flex">
-            <NavLink href="/admin/dashboard">Community Sessions</NavLink>
-            <NavLink href="/admin/dashboard/registrations">
-              Registrations
-            </NavLink>
-            <NavLink href="/admin/dashboard/admins">Admins</NavLink>
-          </div>
-
-          <form action={logout} className="hidden sm:block">
-            <button
-              type="submit"
-              className="rounded-lg border border-cream/20 px-3 py-1.5 text-sm font-medium text-cream/80 transition hover:border-cream/40 hover:text-cream"
-            >
-              Sign out
-            </button>
-          </form>
 
           <MobileNav logout={logout} />
         </nav>
