@@ -3,7 +3,7 @@ import Link from "next/link";
 const tabs = [
   { key: "edit", label: "Details" },
   { key: "objectives", label: "Weekly Objectives" },
-  { key: "attendance", label: "Attendance" },
+  { key: "attendance", label: "Participant" },
   { key: "media", label: "Photos & Videos" },
 ] as const;
 
