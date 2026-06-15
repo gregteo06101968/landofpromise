@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { AuthError } from "next-auth";
@@ -62,19 +61,6 @@ export default async function AdminLoginPage({
         >
           ← Back to home
         </Link>
-        <span className="mb-4 inline-flex rounded-2xl bg-gold/15 px-4 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-gold sm:text-xs sm:tracking-widest">
-          Child&apos;s Information Program
-        </span>
-
-        <Image
-          src="/logo-login.png"
-          alt="Land of Promise"
-          width={6000}
-          height={1173}
-          className="mb-4 h-auto w-56 max-w-full"
-          priority
-        />
-
         <h1 className="font-display text-3xl font-bold text-navy-deep">
           Admin Login
         </h1>
