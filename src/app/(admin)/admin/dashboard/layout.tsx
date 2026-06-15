@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/lib/auth";
 import { NavLink } from "@/components/admin/NavLink";
@@ -22,9 +23,14 @@ export default async function AdminDashboardLayout({
     <div className="flex min-h-screen flex-col bg-slate-50">
       <header className="sticky top-0 z-10 bg-gradient-to-r from-navy-deep to-navy-light shadow-md">
         <nav className="relative mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-3">
-          <span className="font-display text-lg font-semibold text-cream">
-            Land of <span className="text-gold">Promise</span>
-          </span>
+          <Image
+            src="/logo-header.png"
+            alt="Land of Promise"
+            width={5796}
+            height={846}
+            className="h-8 w-auto sm:h-9"
+            priority
+          />
 
           <div className="hidden items-center gap-1 sm:flex">
             <NavLink href="/admin/dashboard">Community Sessions</NavLink>
