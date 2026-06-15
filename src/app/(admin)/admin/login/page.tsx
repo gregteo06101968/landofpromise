@@ -67,7 +67,7 @@ export default async function AdminLoginPage({
         </span>
 
         <Image
-          src="/logo.png"
+          src="/logo-login.png"
           alt="Land of Promise"
           width={6000}
           height={1173}
