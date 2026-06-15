@@ -29,3 +29,12 @@ body {
 .animate-twinkle {
   animation: float-twinkle ease-in-out infinite;
 }
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

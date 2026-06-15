@@ -15,7 +15,7 @@ export function SessionTabs({
   active: (typeof tabs)[number]["key"];
 }) {
   return (
-    <div className="overflow-x-auto border-b border-slate-200">
+    <div className="scrollbar-hide overflow-x-auto border-b border-slate-200">
       <div className="flex w-max min-w-full gap-4">
         {tabs.map((tab) => (
           <Link
