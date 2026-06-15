@@ -5,11 +5,13 @@ import {
   attendanceRecords,
   children,
   communitySessions,
+  objectiveReviewQuestions,
   objectiveSessionRuns,
   observations,
   parents,
   progressAssessments,
   registrations,
+  reviewQuestionResponses,
   sessionMedia,
   sessionObjectives,
 } from "@/db/schema";
@@ -96,12 +98,45 @@ export async function listAdmins() {
     .orderBy(desc(admins.createdAt));
 }
 
+export async function getReviewQuestionsForObjectives(sessionObjectiveIds: number[]) {
+  if (sessionObjectiveIds.length === 0) {
+    return new Map<number, { id: number; question: string }[]>();
+  }
+
+  const questions = await db
+    .select({
+      id: objectiveReviewQuestions.id,
+      sessionObjectiveId: objectiveReviewQuestions.sessionObjectiveId,
+      question: objectiveReviewQuestions.question,
+    })
+    .from(objectiveReviewQuestions)
+    .where(inArray(objectiveReviewQuestions.sessionObjectiveId, sessionObjectiveIds))
+    .orderBy(objectiveReviewQuestions.position);
+
+  const byObjective = new Map<number, { id: number; question: string }[]>();
+  for (const { sessionObjectiveId, ...question } of questions) {
+    const list = byObjective.get(sessionObjectiveId) ?? [];
+    list.push(question);
+    byObjective.set(sessionObjectiveId, list);
+  }
+  return byObjective;
+}
+
 export async function getSessionObjectives(communitySessionId: number) {
-  return db
+  const objectives = await db
     .select()
     .from(sessionObjectives)
     .where(eq(sessionObjectives.communitySessionId, communitySessionId))
     .orderBy(sessionObjectives.weekNumber);
+
+  const reviewQuestionsByObjective = await getReviewQuestionsForObjectives(
+    objectives.map((objective) => objective.id),
+  );
+
+  return objectives.map((objective) => ({
+    ...objective,
+    reviewQuestions: reviewQuestionsByObjective.get(objective.id) ?? [],
+  }));
 }
 
 export async function getSessionObjectiveById(id: number) {
@@ -110,7 +145,16 @@ export async function getSessionObjectiveById(id: number) {
     .from(sessionObjectives)
     .where(eq(sessionObjectives.id, id));
 
-  return objective;
+  if (!objective) {
+    return undefined;
+  }
+
+  const reviewQuestionsByObjective = await getReviewQuestionsForObjectives([objective.id]);
+
+  return {
+    ...objective,
+    reviewQuestions: reviewQuestionsByObjective.get(objective.id) ?? [],
+  };
 }
 
 export async function getChildrenNotInSession(communitySessionId: number) {
@@ -322,5 +366,36 @@ export async function getSessionRunDetail(runId: number) {
     .where(eq(registrations.communitySessionId, run.communitySessionId))
     .orderBy(children.fullName);
 
-  return { ...run, rows };
+  const reviewQuestionsByObjective = await getReviewQuestionsForObjectives([
+    run.sessionObjectiveId,
+  ]);
+  const reviewQuestions = reviewQuestionsByObjective.get(run.sessionObjectiveId) ?? [];
+
+  const responses = await db
+    .select({
+      registrationId: reviewQuestionResponses.registrationId,
+      reviewQuestionId: reviewQuestionResponses.reviewQuestionId,
+      checked: reviewQuestionResponses.checked,
+    })
+    .from(reviewQuestionResponses)
+    .where(eq(reviewQuestionResponses.sessionRunId, runId));
+
+  const checkedByRegistration = new Map<number, Set<number>>();
+  for (const response of responses) {
+    if (!response.checked) continue;
+    const set = checkedByRegistration.get(response.registrationId) ?? new Set<number>();
+    set.add(response.reviewQuestionId);
+    checkedByRegistration.set(response.registrationId, set);
+  }
+
+  return {
+    ...run,
+    reviewQuestions,
+    rows: rows.map((row) => ({
+      ...row,
+      checkedReviewQuestionIds: Array.from(
+        checkedByRegistration.get(row.registrationId) ?? [],
+      ),
+    })),
+  };
 }

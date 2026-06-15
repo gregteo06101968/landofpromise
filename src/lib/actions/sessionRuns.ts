@@ -4,7 +4,13 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
-import { attendanceRecords, objectiveSessionRuns, observations } from "@/db/schema";
+import {
+  attendanceRecords,
+  objectiveReviewQuestions,
+  objectiveSessionRuns,
+  observations,
+  reviewQuestionResponses,
+} from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { sessionRunFormSchema, sessionRunNoteSchema } from "@/lib/validation/session-detail";
 import type { ActionState } from "./types";
@@ -40,6 +46,11 @@ export async function saveSessionRun(
   );
   const attendanceDate = startedDate.toISOString().slice(0, 10);
   const adminId = Number(session.user.id);
+
+  const reviewQuestions = await db
+    .select({ id: objectiveReviewQuestions.id })
+    .from(objectiveReviewQuestions)
+    .where(eq(objectiveReviewQuestions.sessionObjectiveId, sessionObjectiveId));
 
   let runId = 0;
 
@@ -83,6 +94,17 @@ export async function saveSessionRun(
           sessionRunId: runId,
           createdByAdminId: adminId,
         });
+      }
+
+      if (reviewQuestions.length > 0) {
+        await tx.insert(reviewQuestionResponses).values(
+          reviewQuestions.map((question) => ({
+            sessionRunId: runId,
+            registrationId,
+            reviewQuestionId: question.id,
+            checked: formData.get(`reviewQuestion-${registrationId}-${question.id}`) === "on",
+          })),
+        );
       }
     }
   });

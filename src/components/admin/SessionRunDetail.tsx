@@ -5,6 +5,12 @@ type SessionRunDetailRow = {
   childName: string;
   present: boolean | null;
   note: string | null;
+  checkedReviewQuestionIds: number[];
+};
+
+type ReviewQuestion = {
+  id: number;
+  question: string;
 };
 
 function formatDuration(totalSeconds: number) {
@@ -18,11 +24,13 @@ export function SessionRunDetail({
   endedAt,
   durationSeconds,
   rows,
+  reviewQuestions,
 }: {
   startedAt: Date;
   endedAt: Date;
   durationSeconds: number;
   rows: SessionRunDetailRow[];
+  reviewQuestions: ReviewQuestion[];
 }) {
   return (
     <div className="flex flex-col gap-4">
@@ -43,6 +51,18 @@ export function SessionRunDetail({
               </span>
             </div>
             {row.note && <p className="mt-2 text-sm text-slate-600">{row.note}</p>}
+            {reviewQuestions.length > 0 && (
+              <ul className="mt-2 flex flex-col gap-1 text-sm text-slate-600">
+                {reviewQuestions.map((question) => (
+                  <li key={question.id} className="flex items-center gap-2">
+                    <span aria-hidden>
+                      {row.checkedReviewQuestionIds.includes(question.id) ? "☑" : "☐"}
+                    </span>
+                    {question.question}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         ))}
       </div>
@@ -55,6 +75,7 @@ export function SessionRunDetail({
               <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Child</th>
               <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Attendance</th>
               <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Remark</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Checklist</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -63,6 +84,22 @@ export function SessionRunDetail({
                 <td className="px-6 py-3 font-medium text-slate-900">{row.childName}</td>
                 <td className="px-6 py-3 text-slate-600">{row.present ? "Present" : "Absent"}</td>
                 <td className="px-6 py-3 text-slate-600">{row.note || "—"}</td>
+                <td className="px-6 py-3 text-slate-600">
+                  {reviewQuestions.length > 0 ? (
+                    <ul className="flex flex-col gap-1">
+                      {reviewQuestions.map((question) => (
+                        <li key={question.id} className="flex items-center gap-2">
+                          <span aria-hidden>
+                            {row.checkedReviewQuestionIds.includes(question.id) ? "☑" : "☐"}
+                          </span>
+                          {question.question}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    "—"
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

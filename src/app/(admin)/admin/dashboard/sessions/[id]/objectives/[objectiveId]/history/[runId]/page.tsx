@@ -53,6 +53,7 @@ export default async function SessionRunDetailPage({
         endedAt={run.endedAt}
         durationSeconds={run.durationSeconds}
         rows={run.rows}
+        reviewQuestions={run.reviewQuestions}
       />
     </div>
   );

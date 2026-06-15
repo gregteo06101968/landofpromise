@@ -6,6 +6,7 @@ type ObjectiveRow = {
   weekNumber: number;
   title: string;
   description: string | null;
+  reviewQuestions: { id: number; question: string }[];
 };
 
 export function ObjectivesList({
@@ -32,6 +33,13 @@ export function ObjectivesList({
             </div>
             {objective.description && (
               <p className="mt-1 text-sm text-slate-600">{objective.description}</p>
+            )}
+            {objective.reviewQuestions.length > 0 && (
+              <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-slate-600">
+                {objective.reviewQuestions.map((question) => (
+                  <li key={question.id}>{question.question}</li>
+                ))}
+              </ol>
             )}
             <div className="mt-3 flex items-center gap-3">
               <Link
@@ -64,6 +72,7 @@ export function ObjectivesList({
               <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Week</th>
               <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Title</th>
               <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Description</th>
+              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Review Questions</th>
               <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">Actions</th>
             </tr>
           </thead>
@@ -73,6 +82,17 @@ export function ObjectivesList({
                 <td className="px-6 py-3 font-medium text-slate-900">{objective.weekNumber}</td>
                 <td className="px-6 py-3 text-slate-900">{objective.title}</td>
                 <td className="px-6 py-3 text-slate-600">{objective.description || "—"}</td>
+                <td className="px-6 py-3 text-slate-600">
+                  {objective.reviewQuestions.length > 0 ? (
+                    <ol className="list-decimal space-y-1 pl-5">
+                      {objective.reviewQuestions.map((question) => (
+                        <li key={question.id}>{question.question}</li>
+                      ))}
+                    </ol>
+                  ) : (
+                    "—"
+                  )}
+                </td>
                 <td className="px-6 py-3 text-right">
                   <div className="flex items-center justify-end gap-3">
                     <Link

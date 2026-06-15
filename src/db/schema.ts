@@ -94,6 +94,19 @@ export const sessionObjectives = pgTable(
   (table) => [unique().on(table.communitySessionId, table.weekNumber)],
 );
 
+export const objectiveReviewQuestions = pgTable(
+  "objective_review_questions",
+  {
+    id: serial("id").primaryKey(),
+    sessionObjectiveId: integer("session_objective_id")
+      .notNull()
+      .references(() => sessionObjectives.id, { onDelete: "cascade" }),
+    question: text("question").notNull(),
+    position: integer("position").default(0).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+);
+
 export const objectiveSessionRuns = pgTable("objective_session_runs", {
   id: serial("id").primaryKey(),
   sessionObjectiveId: integer("session_objective_id")
@@ -108,6 +121,26 @@ export const objectiveSessionRuns = pgTable("objective_session_runs", {
   createdByAdminId: integer("created_by_admin_id").references(() => admins.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const reviewQuestionResponses = pgTable(
+  "review_question_responses",
+  {
+    id: serial("id").primaryKey(),
+    sessionRunId: integer("session_run_id")
+      .notNull()
+      .references(() => objectiveSessionRuns.id, { onDelete: "cascade" }),
+    registrationId: integer("registration_id")
+      .notNull()
+      .references(() => registrations.id, { onDelete: "cascade" }),
+    reviewQuestionId: integer("review_question_id")
+      .notNull()
+      .references(() => objectiveReviewQuestions.id, { onDelete: "cascade" }),
+    checked: boolean("checked").default(false).notNull(),
+  },
+  (table) => [
+    unique().on(table.sessionRunId, table.registrationId, table.reviewQuestionId),
+  ],
+);
 
 export const attendanceRecords = pgTable(
   "attendance_records",

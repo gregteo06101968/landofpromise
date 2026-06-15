@@ -9,6 +9,13 @@ export const objectiveFormSchema = z.object({
     emptyToUndefined,
     z.string().trim().max(2000).optional(),
   ),
+  reviewQuestions: z.preprocess(
+    (val) =>
+      Array.isArray(val)
+        ? val.map((question) => String(question).trim()).filter((question) => question.length > 0)
+        : [],
+    z.array(z.string().max(500)),
+  ),
 });
 
 export type ObjectiveFormValues = z.infer<typeof objectiveFormSchema>;

@@ -3,7 +3,7 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
-import { sessionObjectives } from "@/db/schema";
+import { objectiveReviewQuestions, sessionObjectives } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { objectiveFormSchema } from "@/lib/validation/session-detail";
 import type { ActionState } from "./types";
@@ -23,16 +23,34 @@ export async function createObjective(
     weekNumber: formData.get("weekNumber"),
     title: formData.get("title"),
     description: formData.get("description"),
+    reviewQuestions: formData.getAll("reviewQuestions"),
   });
 
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
+  const { reviewQuestions, ...objectiveValues } = parsed.data;
+
   try {
-    await db.insert(sessionObjectives).values({
-      communitySessionId,
-      ...parsed.data,
+    await db.transaction(async (tx) => {
+      const [objective] = await tx
+        .insert(sessionObjectives)
+        .values({
+          communitySessionId,
+          ...objectiveValues,
+        })
+        .returning({ id: sessionObjectives.id });
+
+      if (reviewQuestions.length > 0) {
+        await tx.insert(objectiveReviewQuestions).values(
+          reviewQuestions.map((question, index) => ({
+            sessionObjectiveId: objective.id,
+            question,
+            position: index,
+          })),
+        );
+      }
     });
   } catch (err) {
     const code = (err as { cause?: { code?: string } })?.cause?.code;

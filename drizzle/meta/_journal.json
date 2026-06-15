@@ -29,6 +29,13 @@
       "when": 1781363699891,
       "tag": "0003_lazy_maddog",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1781524622158,
+      "tag": "0004_thick_sue_storm",
+      "breakpoints": true
     }
   ]
 }

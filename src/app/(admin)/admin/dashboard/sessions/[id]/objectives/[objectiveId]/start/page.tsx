@@ -40,6 +40,7 @@ export default async function StartSessionPage({
         communitySessionId={sessionId}
         sessionObjectiveId={sessionObjectiveId}
         rows={rows}
+        reviewQuestions={objective.reviewQuestions}
       />
     </div>
   );

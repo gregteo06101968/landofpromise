@@ -17,14 +17,21 @@ function formatDuration(totalSeconds: number) {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
+type ReviewQuestion = {
+  id: number;
+  question: string;
+};
+
 export function StartSessionForm({
   communitySessionId,
   sessionObjectiveId,
   rows,
+  reviewQuestions,
 }: {
   communitySessionId: number;
   sessionObjectiveId: number;
   rows: AttendanceRow[];
+  reviewQuestions: ReviewQuestion[];
 }) {
   const [state, formAction] = useActionState(
     saveSessionRun.bind(null, communitySessionId, sessionObjectiveId),
@@ -74,6 +81,21 @@ export function StartSessionForm({
               {row.childName}
             </label>
             <FormTextArea label="Remark" name={`remark-${row.registrationId}`} rows={2} />
+            {reviewQuestions.length > 0 && (
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium text-navy-deep">Checklist</span>
+                {reviewQuestions.map((question) => (
+                  <label key={question.id} className="flex items-center gap-2 text-sm text-slate-600">
+                    <input
+                      type="checkbox"
+                      name={`reviewQuestion-${row.registrationId}-${question.id}`}
+                      className="h-4 w-4 rounded border-slate-300 text-gold focus:ring-gold"
+                    />
+                    {question.question}
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>
