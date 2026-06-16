@@ -5,9 +5,5 @@ export default function PublicLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <SkyBackground>
-      <div className="relative z-10 w-full max-w-2xl">{children}</div>
-    </SkyBackground>
-  );
+  return <SkyBackground>{children}</SkyBackground>;
 }
