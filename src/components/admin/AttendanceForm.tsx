@@ -1,10 +1,3 @@
-"use client";
-
-import { useActionState } from "react";
-import { ErrorMessage } from "@/components/ui/FormField";
-import { SubmitButton } from "@/components/ui/SubmitButton";
-import { saveAttendance } from "@/lib/actions/attendance";
-
 type AttendanceRow = {
   registrationId: number;
   childName: string;
@@ -12,54 +5,32 @@ type AttendanceRow = {
 };
 
 export function AttendanceForm({
-  communitySessionId,
-  attendanceDate,
   rows,
 }: {
   communitySessionId: number;
   attendanceDate: string;
   rows: AttendanceRow[];
 }) {
-  const [state, formAction] = useActionState(saveAttendance, {});
-
   if (rows.length === 0) {
     return <p className="text-sm text-slate-500">No registered children for this session.</p>;
   }
 
   return (
-    <form action={formAction} className="flex flex-col gap-4">
-      <input type="hidden" name="communitySessionId" value={communitySessionId} />
-      <input type="hidden" name="attendanceDate" value={attendanceDate} />
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Child</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Present</th>
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <table className="w-full divide-y divide-slate-200 text-sm">
+        <thead className="bg-slate-50">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Child</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-100">
+          {rows.map((row) => (
+            <tr key={row.registrationId} className="transition hover:bg-slate-50">
+              <td className="px-6 py-3 font-medium text-slate-900">{row.childName}</td>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {rows.map((row) => (
-              <tr key={row.registrationId} className="transition hover:bg-slate-50">
-                <td className="px-6 py-3 font-medium text-slate-900">{row.childName}</td>
-                <td className="px-6 py-3">
-                  <input
-                    type="checkbox"
-                    name="present"
-                    value={row.registrationId}
-                    defaultChecked={row.present ?? false}
-                    className="h-4 w-4 rounded border-slate-300 text-gold focus:ring-gold"
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <ErrorMessage message={state.error} />
-      <div>
-        <SubmitButton pendingText="Saving...">Save</SubmitButton>
-      </div>
-    </form>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
