@@ -37,10 +37,11 @@ export function StartSessionForm({
     saveSessionRun.bind(null, communitySessionId, sessionObjectiveId),
     {},
   );
-  const [startedAt] = useState(() => new Date().toISOString());
+  const [startedAt, setStartedAt] = useState<string | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
+    if (!startedAt) return;
     const start = new Date(startedAt).getTime();
     const interval = setInterval(() => {
       setElapsedSeconds(Math.floor((Date.now() - start) / 1000));
@@ -54,14 +55,34 @@ export function StartSessionForm({
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
-      <input type="hidden" name="startedAt" value={startedAt} />
+      {startedAt && <input type="hidden" name="startedAt" value={startedAt} />}
 
-      <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-        <span className="text-sm font-medium text-navy-deep">Session timer</span>
-        <span className="font-display text-2xl font-bold text-navy-deep">
-          {formatDuration(elapsedSeconds)}
-        </span>
-      </div>
+      {!startedAt ? (
+        <button
+          type="button"
+          onClick={() => setStartedAt(new Date().toISOString())}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-navy-deep to-navy-light px-4 py-3 text-sm font-semibold text-cream shadow-sm transition hover:opacity-90"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          Start Observation
+        </button>
+      ) : (
+        <div className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gold" />
+            </span>
+            <span className="text-sm font-medium text-navy-deep">Observation in progress</span>
+            <span className="ml-auto font-mono text-xs text-slate-400">{formatDuration(elapsedSeconds)}</span>
+          </div>
+          <div className="relative h-1.5 overflow-hidden rounded-full bg-slate-100">
+            <div className="absolute inset-0 animate-pulse rounded-full bg-gradient-to-r from-navy-deep via-gold to-navy-light" />
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-col gap-4">
         {rows.map((row) => (
